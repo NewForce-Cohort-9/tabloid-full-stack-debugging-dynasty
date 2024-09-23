@@ -1,27 +1,66 @@
 import { useState, useEffect } from "react";
 import { GetAllCategories } from "../../Managers/CategoryManager.js";
 
-export const CategoryList = () => {
-    const [posts, setPosts] = useState([]);
-
-    const getCategor = () => {
-        GetApprovedPosts().then(data => setPosts(data));
+export const Category = () => {
+    const [categories, setCategories] = useState([]);
+  
+    const getCategories = () => {
+      GetAllCategories().then((data) => setCategories(data));
     };
-
+  
     useEffect(() => {
-        getPosts();
+      getCategories();
     }, []);
-
+  
     return (
-        <div>
-            {posts.map(post => (
-                <div key={post.id}>
-                    <h2>{post.title}</h2>
-                    <p>By: {post.author.displayName}</p>
-                    <p>Category: {post.category?.name}</p>
-                    <p>Published on: {new Date(post.publishDateTime).toLocaleDateString()}</p>
-                </div>
-            ))}
+      <div>
+        <header class="masthead bg-primary text-white text-center">
+          <div class="container d-flex align-items-center flex-column">
+            <div class="divider-custom divider-light">
+              <div class="divider-custom-line"></div>
+              <div class="divider-custom-line"></div>
+            </div>
+            <h2 class="pre-wrap font-weight-light mb-0">Categories</h2>
+          </div>
+        </header>
+  
+        <div class="container pt-5">
+          <div className="container d-flex align-items-center justify-content-between w-full">
+            <h1>All Categories</h1>
+            <Link to={"create"}>
+              <a class="btn btn-outline-primary mx-1 text-primary" title="Edit">
+                Create New Category
+              </a>
+            </Link>
+          </div>
+  
+          <table class="table table-striped">
+            <tbody>
+              {categories.map((category) => {
+                return (
+                  <tr>
+                    <td>{category.name}</td>
+                    <td>
+                      <Link to={`edit/${category.id}`}>
+                        <a
+                          className="btn btn-outline-primary mx-1 text-primary"
+                          title="Edit"
+                        >
+                          <EditPencil size={20} />
+                        </a>
+                      </Link>
+                      <Link to={`delete/${category.id}`}>
+                        <a class="btn btn-outline-danger mx-1" title="View">
+                          <TrashcanDelete color="#b91c1c" size={20} />
+                        </a>
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
+      </div>
     );
-};
+  };
