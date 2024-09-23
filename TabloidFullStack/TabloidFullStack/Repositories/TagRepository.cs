@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using TabloidFullStack.Models;
 using TabloidFullStack.Utils;
 
@@ -16,62 +17,67 @@ namespace TabloidFullStack.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
 
-                    cmd.CommandText = @"SELECT * FROM Tag
-                                        ORDER BY Name"
+                    cmd.CommandText = @"SELECT Id, Name FROM Tag
+                                        ORDER BY Name ASC";
                     ;
 
-                    List<Tag> tags = [];
-
                     var reader = cmd.ExecuteReader();
+
+                    var tags = new List<Tag>();
 
                     while (reader.Read())
                     {
                         tags.Add(new Tag()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Name = DbUtils.GetString(reader, "Name"),
                         });
                     }
 
                     reader.Close();
+
                     return tags;
 
                 }
             }
         }
 
-        public Tag GetById(int id)
+        public Tag GetTagById(int id)
         {
-            using (var conn = Connection)
+            using (SqlConnection conn = Connection)
             {
-
                 conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
+                    cmd.CommandText = @"
+                        SELECT Id, [Name]
+                        FROM Tag
+                        WHERE Id = @id
+                    ";
 
-                    cmd.CommandText = @"SELECT * FROM Tag
-                                        WHERE Id = @Id";
-
-                    DbUtils.AddParameter(cmd, "@Id", id);
+                    DbUtils.AddParameter(cmd, "@id", id);
 
                     var reader = cmd.ExecuteReader();
-                    Tag tag = null;
 
                     if (reader.Read())
                     {
-                        tag = new Tag()
+                        Tag tag = new Tag()
                         {
-                            Id = id,
-                            Name = DbUtils.GetString(reader, "Name")
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Name = DbUtils.GetString(reader, "Name"),
                         };
-                    }
-                    reader.Close();
-                    return tag;
-                }
 
+                        reader.Close();
+                        return tag;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
+                }
             }
         }
     }
 }
-    
         

@@ -8,7 +8,7 @@ namespace TabloidFullStack.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(32)]
+        [MaxLength(50)]
         public string Name { get; set; }
     }
 }

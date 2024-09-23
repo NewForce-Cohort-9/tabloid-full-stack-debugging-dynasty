@@ -1,28 +1,27 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { EditPencil, TrashcanDelete } from "../Icons";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Card, CardBody } from 'reactstrap';
 
-export default function Tag({ tag }) {
+export const Tag = ({tag}) => {
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate(`/tag/edit/${tag.id}`)
+  }
+
+  const handleDelete = () => {
+    navigate(`/tag/delete/${tag.id}`)
+  }
+
   return (
-    <>
-      <td>{tag.id}</td>
-      <td>{tag.name}</td>
-      <td>
-        <Link
-          to={`/tags/edit/${tag.id}`}
-          className="btn btn-outline-primary mx-1 text-primary"
-          title="Edit"
-        >
-          <EditPencil size={20} />
-        </Link>
-        <Link
-          to={`/tags/delete/${tag.id}`}
-          className="btn btn-outline-danger mx-1"
-          title="View"
-        >
-          <TrashcanDelete color="#b91c1c" size={20} />
-        </Link>
-      </td>
-    </>
-  );
+    <Card>
+      <CardBody>
+        <p>
+        {tag.name}
+        <Button color="primary" outline size="sm" onClick={handleEdit}>Edit</Button>
+        <Button color="success" outline size="sm" onClick={handleDelete}>Delete</Button>
+        </p>
+        </CardBody>  
+    </Card>
+  )
 }

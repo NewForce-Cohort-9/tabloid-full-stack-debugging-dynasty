@@ -1,56 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { getAllTags } from "../../Managers/TagManager.js";
+import { Tag } from "./Tag.js";
 import { Link } from "react-router-dom";
-import { getAllTags } from "../../Managers/TagManager";
-import Tag from "./Tag";
-import TagPageHeader from "./TagPageHeader";
+import { Button, Col } from "reactstrap";
 
-export default function TagList() {
+export const TagList = () => {
   const [tags, setTags] = useState([]);
 
-  useEffect(() => {
-    callGetTags();
-  }, []);
-
-  const callGetTags = async () => {
-    const tags = await getAllTags();
-    setTags(tags);
+  const getTags = () => {
+    getAllTags().then((allTags) => setTags(allTags));
   };
 
-  return (
-    <>
-      <TagPageHeader title="Tags" />
+  useEffect(() => {
+    getTags();
+  }, []);
 
-      <div className="container pt-5">
-        <div className="container d-flex align-items-center justify-content-between w-100">
-          <h1 className="p-4">All Tags</h1>
-          <Link
-            to="/tags/add"
-            className="btn btn-outline-primary mx-1 text-primary"
-            title="Edit"
-          >
-            Create New Tag
-          </Link>
+  return (
+    <div>
+      <h2>Tags</h2>
+      <div>
+        <Link to="/tag/add" key="tag name">
+            <Col>
+                <Button color="info">Add a new Tag</Button>
+            </Col>
+        </Link>
         </div>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tags &&
-              tags.length > 0 &&
-              tags.map((tag) => {
-                return (
-                  <tr key={tag.id}>
-                    <Tag tag={tag} />
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+        <div>
+        {tags.map((tag) => (
+          <ul>
+            <Tag key={tag.id} tag={tag}/>
+          </ul>
+        ))}
       </div>
-    </>
+    </div>
   );
-}
+};
