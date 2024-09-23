@@ -7,6 +7,7 @@ import { CommentList } from "./Comments/CommentList.js";
 import { CommentForm } from "./Comments/CommentForm.js";
 import {TagList} from "./Tags/TagList.js";
 import { CategoryList } from "./Category/CategoryList.js";
+import { CategoryCreate } from "./Category/CategoryCreate.js";
 
 
 
@@ -23,5 +24,6 @@ export default function ApplicationViews() {
         <Route path="/posts/:postId/comments/add" element={<CommentForm />} />
         <Route path="/tags" element={<TagList />} />
         <Route path="/categories" element={<CategoryList />} />
+        <Route path="/category/add" element={<CategoryCreate />} />
       </Routes>
    )};
