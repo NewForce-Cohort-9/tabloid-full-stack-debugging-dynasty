@@ -1,12 +1,26 @@
-export default function Category({ category }) {
-    return (
-      <>
-        <td>{category.name}</td>
-        <td>
-          <a class="btn btn-outline-danger mx-1" title="View">
-            <TrashcanDelete color="#b91c1c" size={20} />
-          </a>
-        </td>
-      </>
-    );
-  }
+import React from "react";
+import { Button, Card, CardBody } from "reactstrap";
+import { Link } from "react-router-dom";
+
+export const Category = ({ category }) => {
+  return (
+    <Card>
+      <CardBody>
+        <p>
+          {category.name}
+          <Link to={`/category/edit/${category.id}`}>
+            {" "}
+            <Button color="primary" outline size="sm">
+              Edit
+            </Button>
+          </Link>
+          <Link to={`/category/delete/${category.id}`}>
+            <Button color="success" outline size="sm">
+              Delete
+            </Button>
+          </Link>
+        </p>
+      </CardBody>
+    </Card>
+  );
+};

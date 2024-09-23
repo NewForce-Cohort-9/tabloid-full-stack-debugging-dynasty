@@ -1,9 +1,12 @@
-const apiUrl = "https://localhost:5001";
+const apiUrl = "https://localhost:5001/api/Category";
 
-export const GetAllCategories = () => {
-    return fetch(`${apiUrl}/api/category/${id}`).then(res => res.json());
-}
+export const getAllCategories = () => {
+    return fetch(apiUrl)
+    .then((res) => res.json())
+};
+
 
 export const getCategoryById = (id) => {
-    return fetch(`${apiUrl}/api/Category/${id}`).then((res) => res.json())
-}
+    return fetch(`${apiUrl}/${id}`)
+    .then((res) => res.json());
+};
