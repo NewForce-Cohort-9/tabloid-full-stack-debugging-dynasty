@@ -17,6 +17,7 @@ namespace TabloidFullStack
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<IPostRepository, PostRepository>();
+            builder.Services.AddTransient<ICommentRepository, CommentRepository>();
 
             var app = builder.Build();
 
