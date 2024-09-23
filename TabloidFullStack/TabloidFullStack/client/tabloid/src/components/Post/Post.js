@@ -12,6 +12,7 @@ export default function Post ({ post }) {
       <td>{post.author.displayName}</td>
       <td>{post.category?.name}</td>
       <td>{new Date(post.publishDateTime).toLocaleDateString()}</td>
+      
     </>
   );
 }
