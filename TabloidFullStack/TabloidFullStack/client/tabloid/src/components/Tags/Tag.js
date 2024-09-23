@@ -1,27 +1,10 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Card, CardBody } from 'reactstrap';
+import React from "react";
 
-export const Tag = ({tag}) => {
-  const navigate = useNavigate();
-
-  const handleEdit = () => {
-    navigate(`/tag/edit/${tag.id}`)
-  }
-
-  const handleDelete = () => {
-    navigate(`/tag/delete/${tag.id}`)
-  }
-
-  return (
-    <Card>
-      <CardBody>
-        <p>
-        {tag.name}
-        <Button color="primary" outline size="sm" onClick={handleEdit}>Edit</Button>
-        <Button color="success" outline size="sm" onClick={handleDelete}>Delete</Button>
-        </p>
-        </CardBody>  
-    </Card>
-  )
+const Tag = ({tag}) => {
+    return(<div style={{display:'flex', letterSpacing: '.5px', alignItems: 'center', margin: '45px', borderBottom: '1px solid gray', height: '30px', width: '500px', justifyContent: 'space-between'}}>
+    <h5 style={{ marginRight: '15px' }}>{tag.name}</h5>
+    
+</div>
+)
 }
+export default Tag;

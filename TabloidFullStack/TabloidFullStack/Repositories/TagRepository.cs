@@ -1,6 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 using TabloidFullStack.Models;
+using TabloidFullStack.Repositories;
 using TabloidFullStack.Utils;
 
 namespace TabloidFullStack.Repositories
@@ -9,75 +12,67 @@ namespace TabloidFullStack.Repositories
     {
         public TagRepository(IConfiguration configuration) : base(configuration) { }
 
-        public List<Tag> GetAll()
+
+        public List<Tag> GetAllTags()
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-
-                    cmd.CommandText = @"SELECT Id, Name FROM Tag
-                                        ORDER BY Name ASC";
-                    ;
+                    cmd.CommandText = @"SELECT t.Id, t.Name FROM Tag t
+                                           ORDER BY t.Name ";
 
                     var reader = cmd.ExecuteReader();
-
                     var tags = new List<Tag>();
-
                     while (reader.Read())
                     {
                         tags.Add(new Tag()
                         {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            Name = DbUtils.GetString(reader, "Name"),
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
                         });
                     }
 
                     reader.Close();
 
                     return tags;
-
                 }
             }
         }
-
-        public Tag GetTagById(int id)
+        public Tag GetById(int id)
         {
-            using (SqlConnection conn = Connection)
+            using (var conn = Connection)
             {
                 conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
+                using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, [Name]
-                        FROM Tag
-                        WHERE Id = @id
-                    ";
+                            SELECT Name
+                            FROM Tag
+                           WHERE Id = @Id";
 
-                    DbUtils.AddParameter(cmd, "@id", id);
+                    DbUtils.AddParameter(cmd, "@Id", id);
 
                     var reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    Tag tag = null;
+                    while (reader.Read())
                     {
-                        Tag tag = new Tag()
+                        tag = new Tag()
                         {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            Name = DbUtils.GetString(reader, "Name"),
-                        };
+                            Id = id,
 
-                        reader.Close();
-                        return tag;
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+
+                        };
                     }
-                    else
-                    {
-                        reader.Close();
-                        return null;
-                    }
+
+                    reader.Close();
+
+                    return tag;
                 }
             }
         }
     }
 }
-        

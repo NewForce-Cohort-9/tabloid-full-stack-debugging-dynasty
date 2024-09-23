@@ -10,24 +10,19 @@ namespace TabloidFullStack.Controllers
     public class TagController : ControllerBase
     {
         private readonly ITagRepository _tagRepository;
-
         public TagController(ITagRepository tagRepository)
         {
             _tagRepository = tagRepository;
         }
-
-        // GET: api/<TagController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_tagRepository.GetAll());
+            return Ok(_tagRepository.GetAllTags());
         }
-
-        // GET: api/<TagController>/2
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var tag = _tagRepository.GetTagById(id);
+            var tag = _tagRepository.GetById(id);
             if (tag == null)
             {
                 return NotFound();
@@ -36,5 +31,3 @@ namespace TabloidFullStack.Controllers
         }
     }
 }
-
-  

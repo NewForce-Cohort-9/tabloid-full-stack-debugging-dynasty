@@ -1,8 +1,10 @@
 const apiUrl = "https://localhost:5001";
 
-//fetch to get list of Tags
 export const getAllTags = () => {
-    return fetch(`${apiUrl}/api/Tag`)
-    .then((res) => res.json())
+    return fetch(`https://localhost:5001/api/Tag`)
+    .then((res)=> res.json())
 };
-
+export const getById = (id) => {
+  return fetch(`https://localhost:5001/api/Tag/${id}`)
+  .then((res)=> res.json())
+}

@@ -1,37 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { getAllTags } from "../../Managers/TagManager.js";
-import { Tag } from "./Tag.js";
-import { Link } from "react-router-dom";
-import { Button, Col } from "reactstrap";
+import React, {useState, useEffect} from "react";
+import { getAllTags, getById } from "./TagManager";
+import Tag from "./Tag";
+import { useNavigate } from "react-router-dom";
 
-export const TagList = () => {
-  const [tags, setTags] = useState([]);
 
-  const getTags = () => {
-    getAllTags().then((allTags) => setTags(allTags));
-  };
+const TagList = () => {
+    const [tags, setTags] = useState([])
+    const navigate = useNavigate();
+    
+    const getTags = () => {
+        getAllTags().then(all => setTags(all))
+    };
 
-  useEffect(() => {
-    getTags();
-  }, []);
+    useEffect(()=>{
+        getTags();
+    },[]);
 
-  return (
-    <div>
-      <h2>Tags</h2>
-      <div>
-        <Link to="/tag/add" key="tag name">
-            <Col>
-                <Button color="info">Add a new Tag</Button>
-            </Col>
-        </Link>
+    const deleteTag = (id) => {
+      getById(id).then((e) => {navigate(`/deleteTag/${id}`)})
+    }
+
+    const handleEditClick = (id) => {
+      getById(id).then((e) => {navigate(`/editTag/${id}`)})
+  }
+
+
+
+return (
+    <>
+    
+    <div className="container">
+      <div className="row justify-content-center" style={{display: 'flex', flexDirection: 'column'}}>
+      <h4 style={{marginTop: '20px', marginBottom: '15px'}}>Tags</h4>
+          <button onClick={(e) => {
+            navigate('/createTag')
+          }} style={{width: '120px', marginBottom: '25px'}}
+          >Create New Tag</button>
+        <div className="cards-column">
+          {tags.map((tag) => (
+            <div style={{display: 'flex'}}>
+            <Tag key={tag.id} tag={tag} />
+            <button onClick={(e) => {deleteTag(tag.id)}}style={{width: '60px', height: '30px', margin: '5px'}}>Delete</button>
+            <button onClick={(e) => {
+                      handleEditClick(tag.id)
+                    }} style={{width: '40px', height: '30px', margin: '5px'}}> Edit </button>
+          </div>
+          
+          ))}
+          
         </div>
-        <div>
-        {tags.map((tag) => (
-          <ul>
-            <Tag key={tag.id} tag={tag}/>
-          </ul>
-        ))}
       </div>
     </div>
+    </>
   );
-};
+
+}
+export default TagList;
