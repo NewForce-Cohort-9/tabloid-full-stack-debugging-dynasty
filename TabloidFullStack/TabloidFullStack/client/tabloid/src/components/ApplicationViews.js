@@ -5,7 +5,7 @@ import MyPosts from "./Post/MyPosts";
 import PostDetail from "./Post/PostDetail";
 import { CommentList } from "./Comments/CommentList.js";
 import { CommentForm } from "./Comments/CommentForm.js";
-import TagList from "./Tags/ListTags";
+import {TagList} from "./Tags/TagList.js";
 import { CategoryList } from "./Category/CategoryList.js";
 
 
