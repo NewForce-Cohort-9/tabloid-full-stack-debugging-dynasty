@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getPostsByUser } from "../../Managers/PostManager";
 import Post from "./Post"; 
+import { Link } from "react-router-dom"; 
 
 export default function MyPosts() {
     const [posts, setPosts] = useState([]);
