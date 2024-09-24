@@ -21,7 +21,7 @@ namespace TabloidFullStack
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
             builder.Services.AddTransient<ITagRepository, TagRepository>();
 
-            var app = builder.Build();
+           var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
