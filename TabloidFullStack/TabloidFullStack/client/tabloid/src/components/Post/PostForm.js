@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCategories } from '../../Managers/CategoryManager';
-import { addPost } from '../../Managers/PostManager'; 
+import { addPost } from '../../Managers/PostManager';
+import { getUserProfileById } from '../../Managers/UserProfileManager';
 
 export default function PostForm() {
     const [post, setPost] = useState({
@@ -9,28 +10,68 @@ export default function PostForm() {
         content: '',
         imageLocation: '',
         publishDateTime: '',
-        categoryId: ''
+        categoryId: '' 
     });
+
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
-    // Fetch all categories for dropdown
+    // Fetch categories for the dropdown
     useEffect(() => {
         getAllCategories().then(setCategories);
     }, []);
 
+    // Fetch full user profile from API
+    useEffect(() => {
+        const localProfile = JSON.parse(localStorage.getItem("userProfile"));
+        
+        if (localProfile && localProfile.id) {
+            getUserProfileById(localProfile.id).then((profileData) => {
+                localStorage.setItem("userProfile", JSON.stringify(profileData)); // Update local storage with full profile
+                setPost({ ...post, author: profileData });
+            });
+        }
+    }, []);
+
+    // Handle form changes
     const handleChange = (e) => {
-        setPost({ ...post, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setPost({
+            ...post,
+            [name]: name === 'categoryId' ? Number(value) : value 
+        });
     };
 
+    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newPost = { 
-            ...post, 
-            isApproved: true, 
-            createDateTime: new Date().toISOString() //automatically setting date to current date
+
+        const userProfile = JSON.parse(localStorage.getItem("userProfile")); 
+        const selectedCategory = categories.find(c => c.id === post.categoryId);
+
+        if (!userProfile || !selectedCategory) {
+            console.error("Missing userProfile or selectedCategory");
+            return;
+        }
+
+        // (Title, Content, CreateDateTime, PublishDateTime, IsApproved, CategoryId, UserProfileId)
+        const newPost = {
+            ...post,
+            userProfileId: userProfile.id
+            // isApproved: true,
+            // createDateTime: new Date().toISOString(),
+            // categoryId: selectedCategory.id,
+            
+            // publishDateTime: new Date().toISOString(),
+            // // content: 
+            // // title:
+
+            
         };
-        addPost(newPost).then(() => navigate(`/posts`)); 
+
+        addPost(newPost)
+            .then(() => navigate(`/posts`)) 
+            .catch((err) => console.error("Failed to add post:", err));
     };
 
     return (

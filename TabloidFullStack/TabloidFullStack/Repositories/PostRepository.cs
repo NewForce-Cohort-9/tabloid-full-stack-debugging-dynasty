@@ -40,8 +40,13 @@ namespace TabloidFullStack.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                             IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
-                            
-                          
+                            Category = new Category
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                Name = reader.GetString(reader.GetOrdinal("CategoryName"))
+                            },
+
+
                             Author = new UserProfile
                             {
                                 DisplayName = reader.GetString(reader.GetOrdinal("Author"))
@@ -86,8 +91,13 @@ namespace TabloidFullStack.Repositories
                             CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
                             PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
                             IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
-                       
-                            
+                            Category = new Category
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                Name = reader.GetString(reader.GetOrdinal("CategoryName"))
+                            },
+
+
                             Author = new UserProfile
                             {
                                 DisplayName = reader.GetString(reader.GetOrdinal("Author"))
@@ -164,13 +174,52 @@ namespace TabloidFullStack.Repositories
                     cmd.Parameters.AddWithValue("@CreateDateTime", post.CreateDateTime);
                     cmd.Parameters.AddWithValue("@PublishDateTime", post.PublishDateTime ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@IsApproved", post.IsApproved);
-                    /*cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);*/
+                    cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);
                     cmd.Parameters.AddWithValue("@UserProfileId", post.UserProfileId);
 
                     post.Id = (int)cmd.ExecuteScalar();
                 }
             }
         }
+
+        public void DeletePost(int postId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Post WHERE Id = @postId";
+                    cmd.Parameters.AddWithValue("@postId", postId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdatePost(Post post)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE Post
+                        SET Title = @Title,
+                            Content = @Content,
+                            CategoryId = @CategoryId
+                        WHERE Id = @Id";
+
+                    cmd.Parameters.AddWithValue("@Id", post.Id);
+                    cmd.Parameters.AddWithValue("@Title", post.Title);
+                    cmd.Parameters.AddWithValue("@Content", post.Content);
+                    cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
 
     }
