@@ -96,6 +96,45 @@ namespace TabloidFullStack.Repositories
                 }
             }
         }
+        public void Update(Tag tag)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
 
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Tag
+                            SET 
+                                [Name] = @name
+                            WHERE Id = @id";
+
+                    DbUtils.AddParameter(cmd, "@name", tag.Name);
+                    DbUtils.AddParameter(cmd, "@id", tag.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void Delete(int tagId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Tag
+                            WHERE Id = @id
+                        ";
+
+                    DbUtils.AddParameter(cmd, "@id", tagId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

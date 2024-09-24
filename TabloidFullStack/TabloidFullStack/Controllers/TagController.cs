@@ -36,6 +36,22 @@ namespace TabloidFullStack.Controllers
             _tagRepository.Add(tag);
             return CreatedAtAction("Get", new { id = tag.Id }, tag);
         }
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Tag tag)
+        {
+            if (id != tag.Id)
+            {
+                return BadRequest();
+            }
+            _tagRepository.Update(tag);
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _tagRepository.Delete(id);
+            return NoContent();
+        }
     }
-
 }
+
