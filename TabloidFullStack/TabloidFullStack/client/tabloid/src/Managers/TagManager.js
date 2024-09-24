@@ -20,3 +20,18 @@ export const addTag = (tag) => {
         body: JSON.stringify(tag)
     });
 };
+export const editTag = (tag) => {
+    return fetch(`${apiUrl}/${tag.id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tag)
+    })
+    .then(getAllTags)
+}
+export const deleteTag = (id) => {
+    return fetch(`${apiUrl}/${id}`, {
+        method: "DELETE"
+    })
+}

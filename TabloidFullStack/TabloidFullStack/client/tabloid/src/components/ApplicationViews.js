@@ -12,7 +12,8 @@ import { NewTag } from "./Tags/CreateTag.js";
 import { CategoryEdit } from "./Category/CategoryEdit.js";
 import { CategoryDelete } from "./Category/CategoryDelete.js";
 import { DeleteComment } from "./Comments/DeleteComment.js";
-
+import { EditTag } from "./Tags/EditTag.js";
+import { DeleteTag } from "./Tags/DeleteTag.js";
 
 
 
@@ -34,5 +35,7 @@ export default function ApplicationViews() {
         <Route path="/tag/add" element={<NewTag />} />
         <Route path="/category/edit/:id" element={<CategoryEdit/>} />
         <Route path="/category/delete/:id" element={<CategoryDelete />} />
+        <Route path="/tag/edit/:id" element={<EditTag />} /> 
+        <Route path="/tag/delete/:id" element={<DeleteTag />} />
       </Routes>
    )};
