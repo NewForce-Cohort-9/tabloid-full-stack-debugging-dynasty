@@ -40,5 +40,16 @@ namespace TabloidFullStack.Controllers
                 new { email = userProfile.Email },
                 userProfile);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var profile = _userRepository.GetById(id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+            return Ok(profile);
+        }
     }
 }
