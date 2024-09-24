@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GetAllCategories } from '../../Managers/CategoryManager';
-import { addPost } from '../../Managers/PostManager';
-import { getUserProfileById } from '../../Managers/UserProfileManager';
+import { getAllCategories } from '../../Managers/CategoryManager';
+import { addPost } from '../../Managers/PostManager'; 
 
 export default function PostForm() {
     const [post, setPost] = useState({
@@ -10,78 +9,28 @@ export default function PostForm() {
         content: '',
         imageLocation: '',
         publishDateTime: '',
-        categoryId: '' 
+        categoryId: ''
     });
-
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
-    // Fetch categories for the dropdown
+    // Fetch all categories for dropdown
     useEffect(() => {
-        GetAllCategories().then(setCategories);
+        getAllCategories().then(setCategories);
     }, []);
 
-    // Fetch full user profile from API
-    useEffect(() => {
-        const localProfile = JSON.parse(localStorage.getItem("userProfile"));
-        
-        if (localProfile && localProfile.id) {
-            getUserProfileById(localProfile.id).then((profileData) => {
-                localStorage.setItem("userProfile", JSON.stringify(profileData)); // Update local storage with full profile
-                setPost({ ...post, author: profileData });
-            });
-        }
-    }, []);
-
-    // Handle form changes
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPost({
-            ...post,
-            [name]: name === 'categoryId' ? Number(value) : value 
-        });
+        setPost({ ...post, [e.target.name]: e.target.value });
     };
 
-    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const userProfile = JSON.parse(localStorage.getItem("userProfile")); 
-        const selectedCategory = categories.find(c => c.id === post.categoryId);
-
-        if (!userProfile || !selectedCategory) {
-            console.error("Missing userProfile or selectedCategory");
-            return;
-        }
-
-        const newPost = {
-            ...post,
-            isApproved: true,
-            createDateTime: new Date().toISOString(),
-            category: {
-                id: selectedCategory.id,
-                name: selectedCategory.name
-            },
-            userProfileId: userProfile.id,
-            author: {
-                id: userProfile.id,
-                firstName: userProfile.firstName,
-                lastName: userProfile.lastName,
-                displayName: userProfile.displayName,
-                email: userProfile.email,
-                createDateTime: userProfile.createDateTime,
-                imageLocation: userProfile.imageLocation || "default.jpg",
-                userTypeId: userProfile.userTypeId,
-                userType: {
-                    id: userProfile.userTypeId,
-                    name: userProfile.displayName 
-                }
-            }
+        const newPost = { 
+            ...post, 
+            isApproved: true, 
+            createDateTime: new Date().toISOString() //automatically setting date to current date
         };
-
-        addPost(newPost)
-            .then(() => navigate(`/posts`)) 
-            .catch((err) => console.error("Failed to add post:", err));
+        addPost(newPost).then(() => navigate(`/posts`)); 
     };
 
     return (

@@ -3,6 +3,7 @@ import { Button } from "reactstrap";
 import { useEffect, useState } from "react";
 import { deleteCategory, getAllCategories } from "../../Managers/CategoryManager.js";
 
+
 export const CategoryDelete = () => {
     const [category, setCategory] = useState(null);
     const { id } = useParams();
