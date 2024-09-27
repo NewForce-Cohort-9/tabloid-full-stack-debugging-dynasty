@@ -119,7 +119,7 @@ namespace TabloidFullStack.Repositories
                 {
                     cmd.CommandText = @"
                 SELECT p.Id, p.Title, p.Content, p.ImageLocation, p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-                       c.Name AS CategoryName, u.DisplayName AS Author
+                       c.Name AS CategoryName, u.DisplayName AS Author, p.UserProfileId
                 FROM Post p
                 JOIN Category c ON p.CategoryId = c.Id
                 JOIN UserProfile u ON p.UserProfileId = u.Id
@@ -144,6 +144,7 @@ namespace TabloidFullStack.Repositories
                             PublishDateTime = reader.IsDBNull(reader.GetOrdinal("PublishDateTime"))
                                 ? (DateTime?)null
                                 : reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             Author = new UserProfile
                             {
                                 DisplayName = reader.GetString(reader.GetOrdinal("Author"))

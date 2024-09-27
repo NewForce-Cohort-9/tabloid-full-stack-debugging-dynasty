@@ -20,8 +20,10 @@ namespace TabloidFullStack
             builder.Services.AddTransient<ICommentRepository, CommentRepository>();
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
             builder.Services.AddTransient<ITagRepository, TagRepository>();
+            builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+          
 
-           var app = builder.Build();
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
