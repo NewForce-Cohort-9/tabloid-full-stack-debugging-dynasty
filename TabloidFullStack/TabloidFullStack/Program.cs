@@ -1,4 +1,3 @@
-
 using TabloidFullStack.Repositories;
 
 namespace TabloidFullStack
@@ -13,15 +12,13 @@ namespace TabloidFullStack
 
             builder.Services.AddControllers();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<ICommentRepository, CommentRepository>();
+            builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddTransient<IPostRepository, PostRepository>();
+            builder.Services.AddTransient<ITagRepository, TagRepository>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddTransient<IPostRepository, PostRepository>();
-            builder.Services.AddTransient<ICommentRepository, CommentRepository>();
-            builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddTransient<ITagRepository, TagRepository>();
-            builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
-          
 
             var app = builder.Build();
 
@@ -41,7 +38,6 @@ namespace TabloidFullStack
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

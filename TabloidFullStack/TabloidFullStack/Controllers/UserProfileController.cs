@@ -41,15 +41,38 @@ namespace TabloidFullStack.Controllers
                 userProfile);
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(_userRepository.GetAll());
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var profile = _userRepository.GetById(id);
-            if (profile == null)
+            var user = _userRepository.GetById(id);
+
+            if (user == null)
             {
                 return NotFound();
             }
-            return Ok(profile);
+            return Ok(user);
         }
+
+
+        //PUT update userType
+        [HttpPut("{id}")]
+
+        public IActionResult Put(int id, UserProfile userProfile)
+        {
+            if (id != userProfile.Id)
+            {
+                return BadRequest();
+            }
+
+            _userRepository.UpdateType(userProfile);
+            return NoContent();
+        }
+
     }
 }

@@ -17,6 +17,7 @@ import { useState } from "react";
 import { DeleteComment } from "./Comments/DeleteComment.js";
 import { EditTag } from "./Tags/EditTag.js";
 import { DeleteTag } from "./Tags/DeleteTag.js";
+import { UserList } from "./UserProfile/UserProfileList.js";
 
 
 
@@ -47,5 +48,6 @@ export default function ApplicationViews() {
         <Route path="/category/delete/:id" element={<CategoryDelete />} />
         <Route path="/tag/edit/:id" element={<EditTag />} /> 
         <Route path="/tag/delete/:id" element={<DeleteTag />} />
+        <Route path="/user" element={< UserList/>} />
       </Routes>
    )};
