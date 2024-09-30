@@ -30,10 +30,8 @@ namespace TabloidFullStack.Models
         [MaxLength(255)]
         public string? ImageLocation { get; set; }
 
-        [Required]
         public int? UserTypeId { get; set; }
         public UserType? UserType { get; set; }
-        public bool IsDeactivated { get; set; }
 
         public string FullName
         {
