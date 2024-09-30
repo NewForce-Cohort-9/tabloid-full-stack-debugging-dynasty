@@ -2,6 +2,7 @@
 using TabloidFullStack.Models;
 using TabloidFullStack.Repositories;
 
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TabloidFullStack.Controllers
@@ -17,6 +18,25 @@ namespace TabloidFullStack.Controllers
             //_userProfileRepository = userProfileRepository;
             _userRepository = userRepository;
         }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(_userRepository.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var profile = _userRepository.GetById(id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+            return Ok(profile);
+        }
+
+
         [HttpGet("GetByEmail")]
         public IActionResult GetByEmail(string email)
         {
@@ -41,15 +61,44 @@ namespace TabloidFullStack.Controllers
                 userProfile);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+
+        //check https://localhost:5001/uploads/dog.png
+        [HttpPost("upload")]
+        public IActionResult UploadProfileImage(IFormFile file, int userId)
         {
-            var profile = _userRepository.GetById(id);
-            if (profile == null)
+            if (file == null || file.Length == 0)
             {
-                return NotFound();
+                return BadRequest("No file uploaded.");
             }
-            return Ok(profile);
+
+            var filePath = Path.Combine("wwwroot/uploads", file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            //update user profile with the new image path
+            var userProfile = _userRepository.GetById(userId);
+            if (userProfile != null)
+            {
+                userProfile.ImageLocation = $"uploads/{file.FileName}";
+                _userRepository.Update(userProfile);
+            }
+
+            return Ok(new { FilePath = filePath });
         }
+
+
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, UserProfile userProfile)
+        {
+            if (id != userProfile.Id) return BadRequest();
+
+            _userRepository.Update(userProfile);
+            return NoContent();
+        }
+
     }
 }
