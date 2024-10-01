@@ -37,9 +37,9 @@ export const getAllUsers = () => {
           .then((res) => res.json())
 };
 
-export const getUserById = async (id) => {
-  return fetch(`${apiUrl}/api/UserProfile/${id}`)
-          .then((res) => res.json())
+export const getUserById = (userId) => {
+  return fetch(`${apiUrl}/api/UserProfile/${userId}`)
+      .then(response => response.json());
 };
 
 export const updateUserType = (user) => {
@@ -52,10 +52,6 @@ export const updateUserType = (user) => {
   })
 } 
 
-export const getUserProfileById = (id) => {
-  return fetch(`${apiUrl}/api/UserProfile/${id}`)
-      .then((res) => res.json());
-};
 
 // return (
 //   <UserProfileContext.Provider value={{ isLoggedIn, login, logout, register,  }}>

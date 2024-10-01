@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCategories } from '../../Managers/CategoryManager';
 import { addPost } from '../../Managers/PostManager';
-import { getUserProfileById } from '../../Managers/UserProfileManager';
+import { getUserById } from '../../Managers/UserProfileManager';
 
 export default function PostForm() {
     const [post, setPost] = useState({
@@ -26,7 +26,7 @@ export default function PostForm() {
         const localProfile = JSON.parse(localStorage.getItem("userProfile"));
         
         if (localProfile && localProfile.id) {
-            getUserProfileById(localProfile.id).then((profileData) => {
+            getUserById(localProfile.id).then((profileData) => {
                 localStorage.setItem("userProfile", JSON.stringify(profileData)); // Update local storage with full profile
                 setPost({ ...post, author: profileData });
             });
