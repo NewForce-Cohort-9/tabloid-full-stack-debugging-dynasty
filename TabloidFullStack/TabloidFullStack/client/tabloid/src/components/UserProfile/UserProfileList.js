@@ -5,22 +5,22 @@ import { useNavigate } from "react-router-dom";
 
 export const UserList = () => {
     const [users, setUsers] = useState([]);
-    
+
     const getUsers = () => {
         getAllUsers().then(usersObj => setUsers(usersObj));
     };
-    
+
     useEffect(() => {
         getUsers();
     }, []);
-    
+
     const navigate = useNavigate();
-    
+
     return (
         <Container>
             <List>
                 <ListGroup>
-                    <ListGroupItem header>All Users</ListGroupItem>
+                    <ListGroupItem header="All Users" /> {/* Set header to a string */}
                     {users.map((user) => (
                         <ListGroupItem key={user.id} className="d-flex justify-content-between align-items-center">
                             <div>
@@ -50,4 +50,3 @@ export const UserList = () => {
         </Container>
     );
 };
-

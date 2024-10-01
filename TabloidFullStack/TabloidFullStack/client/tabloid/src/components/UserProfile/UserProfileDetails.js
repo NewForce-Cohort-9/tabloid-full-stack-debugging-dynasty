@@ -1,158 +1,83 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getByProfileId } from "../../Managers/UserProfileManager";
-import { getPostsByUser } from "../../Managers/PostManager";
-// import UserProfileImage from "./UserProfileImage";
-import UserProfilePosts from "./UserProfilePosts";
+import { useEffect, useState } from "react"
+import { getUserById } from "../../Managers/UserProfileManager.js";
+import { Card, CardImg, CardText, CardTitle, Container } from "reactstrap";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function UserProfile() {
-  const [profile, setProfile] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const { id: profileId } = useParams();
+export const UserDetails = () => {
 
-  useEffect(() => {
-    if (profileId) callGetProfile();
-  }, [profileId]);
+    const [user, setUser] = useState({});
+    const [date, setDate] = useState("");
 
-  const callGetProfile = async () => {
-    const profile = await getByProfileId(profileId);
-    const posts = await getPostsByUser(profileId);
+    const { userId } = useParams();
 
-    setProfile(profile);
-    setPosts(posts);
-  };
+    const navigate = useNavigate();
 
-  const handleImageUpload = (newImagePath) => {
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      imageLocation: newImagePath, //update image location
-    }));
-  };
+    const getUser = () => {
+       getUserById(userId).then(usersObj => setUser(usersObj));
+    };
 
-  if (!profile) return <div>Profile doesnt exist.</div>;
-  return (
-    <section style={{ backgroundColor: "#eee" }}>
-      <div className="container py-5">
-        <div className="row">
-          <div className="col-lg-4">
-            <div className="card mb-4">
-              <div className="card-body text-center">
-                {/* {profile.imageLocation ? (
-                  <img
-                    src={`https://localhost:5001/${profile.imageLocation}`}
-                    alt="avatar"
-                    className="rounded-circle img-fluid"
-                    style={{ width: "150px", height: "150px" }}
-                  />
-                ) : (
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"
-                    alt="default avatar"
-                    className="rounded-circle img-fluid"
-                    style={{ width: "150px" }}
-                  />
-                )} */}
+    const getFormattedDate = (dateTime) =>
+    {
+        const date = new Date(dateTime);
 
-                {/* UserProfileImage component for upload image */}
-                {/* <UserProfileImage
-                  userId={profile.id}
-                  onImageUpload={handleImageUpload}
-                /> */}
+        const newDate = date.toLocaleDateString();
 
-                <h5 className="my-3">{profile.displayName}</h5>
-                <p className="text-muted mb-1">
-                  {profile.fullName ??
-                    `${profile.firstName} ${profile.lastName}`}
-                </p>
-                <p className="text-muted mb-4">{profile.email}</p>
-                <div className="d-flex justify-content-center mb-2">
-                  {profile.isDeactivated ? (
-                    <Link
-                      to={`/profile/reactivate/${profile.id}`}
-                      type="button"
-                      className="btn btn-success"
+        return newDate;
+    };
+
+    useEffect(() => {
+        getUser();
+    }, [userId]);
+
+    useEffect(() => {
+        const dateString = getFormattedDate(user.createDateTime);
+        setDate(dateString);
+    }, [userId, user.createDateTime]);
+
+    return(
+        <Container>
+            <Card>
+                <CardTitle
+                 key={user.id}
+                >
+                    <h5>User Profile Details</h5>
+                    <CardText
                     >
-                      Reactivate
-                    </Link>
-                  ) : (
-                    <Link
-                      to={`/profile/deactivate/${profile.id}`}
-                      type="button"
-                      className="btn btn-danger"
+                       <strong>Full Name: </strong> 
+                        {user.fullName}
+                    </CardText>
+                    <CardText
                     >
-                      Deactivate
-                    </Link>
-                  )}
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary ms-1"
-                  >
-                    Message
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-8">
-            <div className="card mb-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Display Name</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">{profile.displayName}</p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Full Name</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">
-                      {profile.fullName ??
-                        `${profile.firstName} ${profile.lastName}`}
-                    </p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Email</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">{profile.email}</p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Creation Date</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">
-                      {new Date(profile.createDateTime).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Profile type</p>
-                  </div>
-                  <div className="col-sm-9">
-                    <p className="text-muted mb-0">{profile.userType.name}</p>
-                  </div>
-                </div>
-                <hr />
-              </div>
-            </div>
-          </div>
-          <UserProfilePosts posts={posts} />
-        </div>
-      </div>
-    </section>
-  );
+                        <strong>Display Name:</strong> 
+                        {user.displayName}
+                    </CardText>
+                    {user.imageLocation ? (
+                        <CardImg 
+                        style={{
+                            width: '100px'
+                        }}
+                        src={user.imageLocation} />
+                    ) : (
+                        <CardImg 
+                        style={{
+                            width: '100px'
+                        }}
+                        src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Font_Awesome_5_regular_user-circle.svg" />
+                    )}
+                    <CardText>
+                        <strong>Email: </strong>
+                         {user.email}
+                    </CardText>
+                    <CardText>
+                        <strong>Creation Date: </strong> 
+                        {user.createDateTime ? date : '...'}
+                    </CardText>
+                    <CardText>
+                        <strong>User Type: </strong> 
+                        {user.userType ? user.userType.name : '...'}
+                    </CardText>
+                </CardTitle>
+            </Card>
+        </Container>
+    )
 }
