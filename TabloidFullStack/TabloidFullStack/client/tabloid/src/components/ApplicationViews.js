@@ -18,6 +18,7 @@ import { DeleteComment } from "./Comments/DeleteComment.js";
 import { EditTag } from "./Tags/EditTag.js";
 import { DeleteTag } from "./Tags/DeleteTag.js";
 import { UserList } from "./UserProfile/UserProfileList.js";
+import CreateReaction from "./Reaction/CreateReaction.js";
 
 
 
@@ -49,5 +50,6 @@ export default function ApplicationViews() {
         <Route path="/tag/edit/:id" element={<EditTag />} /> 
         <Route path="/tag/delete/:id" element={<DeleteTag />} />
         <Route path="/user" element={< UserList/>} />
+        <Route path="/create-reaction" element={<CreateReaction />} />
       </Routes>
    )};
