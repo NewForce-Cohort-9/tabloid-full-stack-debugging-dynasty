@@ -129,7 +129,7 @@ export default function PostDetails() {
             <img
               src={reaction.imageLocation}
               alt={reaction.name}
-              style={{ width: '30px', height: '30px', padding:'10px', cursor: 'pointer', opacity: userReaction === reaction.id ? 1 : 0.5 }}
+              style={{ width: '150px', height: '150px', padding:'10px', cursor: 'pointer', opacity: userReaction === reaction.id ? 1 : 0.5 }}
               onClick={() => handleReaction(reaction.name.toLowerCase())}
             />
             <span>{reaction.reactionCount}</span>
