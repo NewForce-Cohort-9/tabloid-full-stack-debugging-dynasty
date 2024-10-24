@@ -20,6 +20,10 @@ import { DeleteTag } from "./Tags/DeleteTag.js";
 import { UserList } from "./UserProfile/UserProfileList.js";
 import CreateReaction from "./Reaction/CreateReaction.js";
 import { UserDetails } from "./UserProfile/UserProfileDetails.js";
+import { DeactivateUser } from "./UserProfile/DeactivateUser.js";
+import { UserEditType } from "./UserProfile/UserProfileEdit.js";
+import { DeactivatedUserList } from "./UserProfile/DeactivateUserList.js";
+import { ReactivateUser } from "./UserProfile/ReactivateUser.js";
 
 
 
@@ -28,7 +32,7 @@ export default function ApplicationViews() {
 
  return(
       <Routes>
-        <Route path="/" element={<Hello />} />
+        <Route path="/login" element={<Hello />} />
         <Route path="/posts" element={<PostList />} />
       {/* <Route
         path="/posts/:id/comments/create"
@@ -51,7 +55,11 @@ export default function ApplicationViews() {
         <Route path="/tag/edit/:id" element={<EditTag />} /> 
         <Route path="/tag/delete/:id" element={<DeleteTag />} />
         <Route path="/user" element={< UserList/>} />
+        <Route path="/users/deactivate/:userId" element={<DeactivateUser />} />
+        <Route path="/users/editType/:userId" element={<UserEditType />} />
         <Route path="/create-reaction" element={<CreateReaction />} />
-        <Route path="/users/:userId" element={<UserDetails/>} /> 
+        <Route path="/users/:userId" element={<UserDetails/>} />
+        <Route path="/users/deactivated" element={<DeactivatedUserList />} />
+        <Route path="/users/reactivate/:userId" element={<ReactivateUser />} /> 
       </Routes>
    )};

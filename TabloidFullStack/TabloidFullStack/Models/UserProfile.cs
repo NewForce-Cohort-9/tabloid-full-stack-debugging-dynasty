@@ -40,5 +40,8 @@ namespace TabloidFullStack.Models
                 return $"{FirstName} {LastName}";
             }
         }
+
+        public bool Deactivated { get; set; }
+
     }
 }
